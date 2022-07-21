@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=.0">
+  <title>Validador de força de senha</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>Indicador de força de senha</header>
+    <form action="#">
+      <div class="field">
+        <input type="password" onkeyup="trigger()" placeholder="Informe sua senha">
+        <span class="showBtn">SHOW</span>
+      </div>
+      <div class="indicator">
+        <span class="fraco"></span>
+        <span class="medio"></span>
+        <span class="forte"></span>
+      </div>
+      <div class="text">Fraca</div>
+    </form>
+  </div>
+
+  <script>
+    const indicator = document.querySelector('.indicator');
+    const input = document.querySelector('input');
+    const fraco = document.querySelector('.fraco');
+    const medio = document.querySelector('.medio');
+    const forte = document.querySelector('.forte');
+    const text = document.querySelector('.text');
+    const showBtn = document.querySelector('.showBtn');
+
+    let regExpFraco = /[a-z]/;
+    let regExpMedio = /\d+/;
+    let regExpForte = /.[!,@,#,$,%,^,&,*,?,_,~,-,(,)]/;
+
+    function trigger() {
+      if (input.value != "") {
+        indicator.style.display = "flex";
+
+        if (input.value.length <= 3
+          && (input.value.match(regExpFraco)
+            || input.value.match(regExpMedio)
+            || input.value.match(regExpForte))) no = 1;
+
+        if (input.value.length >= 6
+          && ((input.value.match(regExpFraco)
+            && input.value.match(regExpMedio))
+            || (input.value.match(regExpMedio)
+              && input.value.match(regExpForte))
+            || (input.value.match(regExpFraco)
+              && input.value.match(regExpForte)))) no = 2;
+
+        if (input.value.length >= 6
+          && input.value.match(regExpFraco)
+          && input.value.match(regExpMedio)
+          && input.value.match(regExpForte)) no = 3;
+
+        if (no == 1){
+          fraco.classList.add('active');
+          text.style.display ="block";
+          text.textContent="A sua senha é fraca";
+          text.classList.add('fraco');
+        }
+
+        if (no == 2){
+          medio.classList.add('active');
+          text.style.display ="block";
+          text.textContent="A sua senha é mediana";
+          text.classList.add('medio');
+        }else{
+          medio.classList.remove('active');
+          text.classList.remove('medio');
+        }
+
+        if (no == 3){
+          forte.classList.add('active');
+          text.style.display ="block";
+          text.textContent="A sua senha é forte";
+          text.classList.add('forte');
+        }else{
+          forte.classList.remove('active');
+          text.classList.remove('forte');
+        }
+
+        showBtn.style.display='block';
+        showBtn.onclick=function(){
+
+          if(input.type =='password'){
+            showBtn.textContent="HIDE";
+            input.type = 'text';
+          }else{
+            showBtn.textContent="SHOW";
+            input.type = 'password';
+          }
+        }
+
+      } else {
+        indicator.style.display = "none";
+        text.style.display = "none";
+        showBtn.style.display = "none"
+      }
+    }
+  </script>
+</body>
+
+</html>
